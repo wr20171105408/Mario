@@ -9,7 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import StartGame.Startgame;
+
+import StartGame.Start;
 
 public class mainPage {
 
@@ -76,7 +77,9 @@ public class mainPage {
 				// TODO Auto-generated method stub
 				System.out.println("开始游戏");
 				frame.dispose();
-				Startgame.start(null);
+				Start s = new Start();
+				s.run();
+				
 			}
 		});
 		helpButton.addActionListener(new ActionListener() {
@@ -107,7 +110,6 @@ public class mainPage {
 				frameother.setVisible(true);
 			}
 		});
-		
 	}
 	
 }
