@@ -21,7 +21,7 @@ public class MarioThread implements Runnable{
 		// TODO Auto-generated method stub
 		while(true) {
 			try {
-				Thread.sleep(5);
+				Thread.sleep(20);
 			} catch (InterruptedException e) {
 				// TODO: handle exception
 				e.printStackTrace();

@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import StartGame.Start;
+import Main.Start;
 
 public class mainPage {
 
@@ -78,7 +78,7 @@ public class mainPage {
 				System.out.println("开始游戏");
 				frame.dispose();
 				Start s = new Start();
-				s.run();				
+				s.go();				
 			}
 		});
 		helpButton.addActionListener(new ActionListener() {
