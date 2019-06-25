@@ -3,12 +3,11 @@ package Body;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import javax.swing.ImageIcon;
 
 public class Mario implements Runnable{
 	public int x = 0, y = 600;
-	public int width = 40, heigth = 50;
+	public int backdropX,backdropY;
 	public int vx = 5;
 	public Image icon = new ImageIcon("Images/right.png").getImage();
 	public boolean left = false, right = false, jump = false;// 不让角色走路异常
@@ -57,9 +56,16 @@ public class Mario implements Runnable{
 		while (true) {
 			if (right) {
 				if (x < 1230) {
-					x = vx + x;
-					icon = new ImageIcon("Images/mario_right.gif").getImage();
-					System.out.println(x);
+					if(x<=640) {
+						x = vx + x;
+						icon = new ImageIcon("Images/mario_right.gif").getImage();
+					}else if(x>640) {
+						backdropX = backdropX-vx;
+						if(backdropX<-650) {
+							backdropX=0;
+						}
+						icon = new ImageIcon("Images/mario_right.gif").getImage();
+					}
 				}
 			}
 			if (left) {

@@ -13,7 +13,7 @@ public class Start extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	Mario mario = new Mario();
-	BackDrop backdrop = new BackDrop();
+    BackDrop backdrop = new BackDrop();
 	public void go() {
 		// TODO Auto-generated method stub
 		this.setSize(1280, 760);
@@ -45,9 +45,11 @@ public class Start extends JFrame{
 		bf =(BufferedImage)this.createImage(this.getSize().width, this.getSize().height);//实现缓冲,这样的重绘方法实现了对背景图和超级玛丽的双缓冲
 		bg = bf.createGraphics();//初始化
 		bg=bf.getGraphics(); //获得bf对象的画笔
-		bg.drawImage(backdrop.icon,backdrop.x,backdrop.y,null); //绘制背景图
-		bg.drawImage(mario.icon, mario.x, mario.y, mario.width, mario.heigth,null);//绘制超级玛丽
+		bg.drawImage(backdrop.icon,mario.backdropX,mario.backdropY,null); //绘制背景图
+		//System.out.println("地图的横坐标x"+backdrop.x+"   "+"地图的纵坐标y"+backdrop.y );
+		bg.drawImage(mario.icon, mario.x, mario.y, mario.icon.getWidth(null), mario.icon.getHeight(null),null);//绘制超级玛丽
 		g.drawImage(bf,0,0, null);//往窗口绘图
+
 	}
 	
 }
