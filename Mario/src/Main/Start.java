@@ -3,7 +3,6 @@ package Main;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import Body.BackDrop;
@@ -55,7 +54,7 @@ public class Start extends JFrame {
 		bg.drawImage(backdrop.icon, mario.backdropX, mario.backdropY, null); // 绘制背景图
 		for(int i=0;i<map.mapxlist.size();i++) {
 			for(int j=0;j<map.mapylist.size();j++) {
-				bg.drawImage(map.icon,map.mapxlist.get(i),map.mapylist.get(j), null); // 绘制背景图
+				bg.drawImage(map.icon,mario.mapxlist.get(i),mario.mapylist.get(j), null); // 绘制背景图
 			}
 		}
 		// System.out.println("地图的横坐标x"+backdrop.x+" "+"地图的纵坐标y"+backdrop.y );

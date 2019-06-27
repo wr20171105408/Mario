@@ -3,11 +3,16 @@ package Body;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
 
 public class Mario implements Runnable{
 	public int x = 0, y = 600;
-	public int backdropX,backdropY;
+	public int backdropX,backdropY;//背景图片的坐标
+	public Map map;
+	public ArrayList<Integer> mapxlist = map.mapxlist;//记录地图组件的坐标
+	public ArrayList<Integer> mapylist = map.mapylist;//记录地图组件的坐标
 	public int vx = 5;
 	public Image icon = new ImageIcon("Images/right.png").getImage();
 	public boolean left = false, right = false, jump = false;// 不让角色走路异常
@@ -61,6 +66,9 @@ public class Mario implements Runnable{
 						icon = new ImageIcon("Images/mario_right.gif").getImage();
 					}else if(x>640) {
 						backdropX = backdropX-vx;
+						for(int i=0;i<mapxlist.size();i++) {
+							mapxlist.set(i, mapxlist.get(i)-5);
+						}
 						if(backdropX<-650) {
 							backdropX=0;
 						}
