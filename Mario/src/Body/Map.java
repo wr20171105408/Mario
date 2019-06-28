@@ -2,14 +2,11 @@ package Body;
 
 import java.awt.Image;
 import java.util.ArrayList;
-
 import javax.swing.ImageIcon;
 
 public class Map {
-	public  Image icon = new ImageIcon("Images/brick.jpg").getImage();
-	public static ArrayList<Integer> mapxlist = new  ArrayList<Integer>();//记录地图组件的坐标
-	public static ArrayList<Integer> mapylist = new  ArrayList<Integer>();//记录地图组件的坐标
-	public int bwidth=50,bheight=50;
+	public  MapAttribute a;
+	public static ArrayList<MapAttribute> maplist = new ArrayList<MapAttribute>();
 	public int [][] map = {
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,1,1},//1
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,1,1},//2
@@ -22,8 +19,8 @@ public class Map {
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,1,1},//9
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,1,1},//10
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,1,1},//11
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,1,1},//12
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,1,1},//13
+		{0,0,0,0,0,0,0,0,0,0,0,0,2,1,1},//12
+		{0,0,0,0,0,0,0,0,0,0,0,2,0,1,1},//13
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},//14
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},//15
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},//16
@@ -39,29 +36,19 @@ public class Map {
 	public void read() {
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[i].length; j++) {
-				if (map[i][j] == 1) {
-					mapxlist.add(i*bwidth);
-					mapylist.add(j*bheight);
-					icon=new ImageIcon("Images/brick.jpg").getImage();// 绘制地图组件
-				}else if(map[i][j] == 0) {
-					icon=null;
+				if (map[i][j] == 1) {//砖块
+					a = new MapAttribute(i*50, j*50, 50, 50, new ImageIcon("Images/brick.jpg").getImage());
+					maplist.add(a);
+				}else if(map[i][j] == 2) {
+					a = new MapAttribute(i*42, j*48, 50, 50, new ImageIcon("Images/coin.png").getImage());
+					maplist.add(a);
 				}
 			}
 		}
-		for(int k =0;k<mapylist.size();k++) {
-			System.out.println(mapylist.get(k));
+/*		for (int k = 0; k<maplist.size();k++) {
+			MapAttribute a = maplist.get(k);
+			System.out.println(a.icon+" "+a.x+" "+a.y+"  "+a.width+" "+a.height);
 		}
-	}
-	public ArrayList<Integer> getMapxlist() {
-		return this.mapxlist;
-	}
-	public void setMapxlist(ArrayList<Integer> mapxlist) {
-		this.mapxlist = mapxlist;
-	}
-	public ArrayList<Integer> getMapylist() {
-		return this.mapylist;
-	}
-	public void setMapylist(ArrayList<Integer> mapylist) {
-		this.mapylist = mapylist;
+		System.out.println(maplist.size());*/
 	}
 }

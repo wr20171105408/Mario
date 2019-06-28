@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 
 import Body.BackDrop;
 import Body.Map;
+import Body.MapAttribute;
 import Body.Mario;
 
 public class Start extends JFrame {
@@ -17,7 +18,6 @@ public class Start extends JFrame {
 	Mario mario = new Mario();
 	BackDrop backdrop = new BackDrop();
 	Map map = new Map();
-
 	public void go() {
 		// TODO Auto-generated method stub
 		this.setSize(1200, 750);
@@ -27,6 +27,7 @@ public class Start extends JFrame {
 		this.setDefaultCloseOperation(3);
 		map.read();//获取地图组件坐标
 		this.addKeyListener(mario.kl);
+		mario.Collide();
 		mario.trun.start();
 		System.out.println(mario.icon.getWidth(null) + "  " + mario.icon.getHeight(null));
 		this.setVisible(true);
@@ -47,15 +48,15 @@ public class Start extends JFrame {
 
 	private BufferedImage bf;
 	private Graphics bg;
+	public int x,y;
 	public void paint(Graphics g) {
 		bf = (BufferedImage) this.createImage(this.getSize().width, this.getSize().height);// 实现缓冲,这样的重绘方法实现了对背景图和超级玛丽的双缓冲
 		bg = bf.createGraphics();// 初始化
 		bg = bf.getGraphics(); // 获得bf对象的画笔
 		bg.drawImage(backdrop.icon, mario.backdropX, mario.backdropY, null); // 绘制背景图
-		for(int i=0;i<map.mapxlist.size();i++) {
-			for(int j=0;j<map.mapylist.size();j++) {
-				bg.drawImage(map.icon,mario.mapxlist.get(i),mario.mapylist.get(j), null); // 绘制背景图
-			}
+		for(int i=0;i<map.maplist.size();i++) {
+			MapAttribute a = map.maplist.get(i);
+			bg.drawImage(a.icon,a.x,a.y,a.width,a.height,null); // 绘制背景图
 		}
 		// System.out.println("地图的横坐标x"+backdrop.x+" "+"地图的纵坐标y"+backdrop.y );
 		bg.drawImage(mario.icon, mario.x, mario.y, mario.icon.getWidth(null), mario.icon.getHeight(null), null);// 绘制超级玛丽
