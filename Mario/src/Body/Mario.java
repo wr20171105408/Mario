@@ -14,8 +14,7 @@ public class Mario implements Runnable {
 	public Map map;
 	public int vx = 5;
 	public Image icon = new ImageIcon("Images/right.png").getImage();
-	public boolean left = false, right = false, jump = false;// 不让角色走路异常
-	public boolean ObstaclesLeft = true, ObstaclesRight = true, ObstaclesUp = true, ObstaclesDown = true;// 不让角色走路异常
+	public boolean left = false, right = false, jump = false,down = false;
 	public KeyListener kl = new KeyListener() {
 		@Override
 		public void keyTyped(KeyEvent e) {//// 发生击键事件时被触发
@@ -45,11 +44,9 @@ public class Mario implements Runnable {
 			// TODO Auto-generated method stub
 			int key = e.getKeyCode();
 			if (key == KeyEvent.VK_D) {
-				Collide();
 				right = true;
 			}
 			if (key == KeyEvent.VK_A) {
-				Collide();
 				left = true;
 			}
 			if (key == KeyEvent.VK_W) {
@@ -63,10 +60,9 @@ public class Mario implements Runnable {
 	public void run() {
 		while (true) {
 			if (right) {
-				if (ObstaclesRight == false) {
+				vx=5;
+				if (RCollisionDetection()) {// 有障碍的话玛丽的速度为0
 					vx = 0;
-				} else if (ObstaclesRight == true) {
-					vx = 5;
 				}
 				if (x < 1230) {
 					if (x <= 640) {
@@ -86,9 +82,10 @@ public class Mario implements Runnable {
 				}
 			}
 			if (left) {
-				if (ObstaclesLeft == false) {
+				vx=5;
+				if (LCollisionDetection()) {
 					vx = 0;
-				} else if (ObstaclesLeft == true) {
+				} else if (LCollisionDetection()) {
 					vx = 5;
 				}
 				if (x > 0) {
@@ -141,37 +138,64 @@ public class Mario implements Runnable {
 
 	}
 
-	public void Collide() {// 碰撞检测函数 用的是矩形碰撞检测 因为超级玛丽的图片都是矩形类型
-		Rectangle mariorectangle = new Rectangle(x, y, icon.getWidth(null), icon.getHeight(null));// 超级玛丽的形状大小
-		Rectangle obstaclerectangle;// 障碍物的形状大小
-		for (int j = 0; j < map.maplist.size(); j++) {
-			MapAttribute ma = map.maplist.get(j);
-			obstaclerectangle = new Rectangle(ma.x + 2, ma.y, ma.width, ma.height);
-			// System.out.println(ma.x+2+" "+ ma.y+" "+ ma.width+ " "+ ma.height);
-			if (mariorectangle.intersects(obstaclerectangle)) {
-				ObstaclesRight = false;
-				System.out.println("右边有障碍");
-			} else if (mariorectangle.intersects(obstaclerectangle) == false) {
-				ObstaclesRight = true;
+	public boolean RCollisionDetection() {// 向右检测碰撞函数
+		Rectangle Rmario = new Rectangle(x, y, icon.getWidth(null), icon.getHeight(null));
+		Rectangle Rmap=null;
+		for (int i = 0; i < map.maplist.size(); i++) {
+			MapAttribute a = map.maplist.get(i);
+			if(right) {
+				Rmap = new Rectangle(a.x-5, a.y, a.icon.getWidth(null), a.icon.getHeight(null));
 			}
-			// System.out.println(ObstaclesLeft);
-			obstaclerectangle = new Rectangle(ma.x - 2, ma.y, ma.width, ma.height);
-			if (mariorectangle.intersects(obstaclerectangle)) {
-				ObstaclesLeft = false;
-			}else if (mariorectangle.intersects(obstaclerectangle) == false) {
-				ObstaclesLeft = true;
+			if(Rmario.intersects(Rmap)) {
+				System.out.println("右边有东西");
+				return true;
 			}
-			obstaclerectangle = new Rectangle(ma.x, ma.y + 2, ma.width, ma.height);
-			if (mariorectangle.intersects(obstaclerectangle)) {
-				ObstaclesDown = false;
-				// System.out.println(ObstaclesUp);
-			}
-			obstaclerectangle = new Rectangle(ma.x, ma.y - 2, ma.width, ma.height);
-			if (mariorectangle.intersects(obstaclerectangle)) {
-				ObstaclesUp = false;
-				// System.out.println(ObstaclesDown);
-			}
-		 System.out.println("左："+ObstaclesLeft+"右："+ObstaclesRight+"上："+ObstaclesUp+"下："+ObstaclesDown);
 		}
+		return false;
+	}
+	public boolean LCollisionDetection() {// 向左检测碰撞函数
+		Rectangle Rmario = new Rectangle(x, y, icon.getWidth(null), icon.getHeight(null));
+		Rectangle Rmap=null;
+		for (int i = 0; i < map.maplist.size(); i++) {
+			MapAttribute a = map.maplist.get(i);
+			if(left) {
+				Rmap = new Rectangle(a.x+2, a.y, a.icon.getWidth(null), a.icon.getHeight(null));
+			}
+			if(Rmario.intersects(Rmap)) {
+				System.out.println("左边有东西");
+				return true;
+			}
+		}
+		return false;
+	}
+	public boolean UCollisionDetection() {//向上检测碰撞函数
+		Rectangle Rmario = new Rectangle(x, y, icon.getWidth(null), icon.getHeight(null));
+		Rectangle Rmap=null;
+		for (int i = 0; i < map.maplist.size(); i++) {
+			MapAttribute a = map.maplist.get(i);
+			if(jump) {
+				Rmap = new Rectangle(a.x, a.y+2, a.icon.getWidth(null), a.icon.getHeight(null));
+			}
+			if(Rmario.intersects(Rmap)) {
+				System.out.println("上边有东西");
+				return true;
+			}
+		}
+		return false;
+	}
+	public boolean DCollisionDetection() {//向下检测碰撞函数
+		Rectangle Rmario = new Rectangle(x, y, icon.getWidth(null), icon.getHeight(null));
+		Rectangle Rmap=null;
+		for (int i = 0; i < map.maplist.size(); i++) {
+			MapAttribute a = map.maplist.get(i);
+			if(down) {
+				Rmap = new Rectangle(a.x, a.y-2, a.icon.getWidth(null), a.icon.getHeight(null));
+			}
+			if(Rmario.intersects(Rmap)) {
+				System.out.println("下边有东西");
+				return true;
+			}
+		}
+		return false;
 	}
 }

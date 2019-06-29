@@ -27,7 +27,6 @@ public class Start extends JFrame {
 		this.setDefaultCloseOperation(3);
 		map.read();//获取地图组件坐标
 		this.addKeyListener(mario.kl);
-		mario.Collide();
 		mario.trun.start();
 		System.out.println(mario.icon.getWidth(null) + "  " + mario.icon.getHeight(null));
 		this.setVisible(true);
