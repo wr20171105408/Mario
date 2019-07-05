@@ -69,6 +69,9 @@ public class Mario implements Runnable {
 				if (RCollisionDetection()) {// 有障碍的话玛丽的速度为0
 					vx = 0;
 				}
+				if(DCollisionDetection()) {
+					IfFloat();
+				}
 				if (x < 1230) {
 					if (x <= 640) {
 						x = vx + x;
@@ -111,14 +114,14 @@ public class Mario implements Runnable {
 		new Thread(tjump) {
 			public void run() {
 				if (Jump == 1) {
-					for (int i = 0; i < 150; i = i + vx) {
+					for (int i = 0; i < 250; i = i + vx) {
 						y = y - vx;
 						if (UCollisionDetection()) {
 							vx = 0;
 							break;
 						}
 						try {
-							Thread.sleep(15);
+							Thread.sleep(10);
 						} catch (InterruptedException e) {
 							// TODO: handle exception
 							e.printStackTrace();
@@ -205,8 +208,8 @@ public class Mario implements Runnable {
 				break;
 			}
 			try {
-				Thread.sleep(20);
-			} catch (Exception e) {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
@@ -221,8 +224,8 @@ public class Mario implements Runnable {
 						break;
 					}
 					try {
-						Thread.sleep(20);
-					} catch (Exception e) {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
 						// TODO: handle exception
 						e.printStackTrace();
 					}
