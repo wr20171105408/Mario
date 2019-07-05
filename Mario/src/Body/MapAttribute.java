@@ -1,5 +1,5 @@
 package Body;
-
+//这是地图组件的属性类
 import java.awt.Image;
 
 public class MapAttribute {

@@ -14,7 +14,9 @@ public class Mario implements Runnable {
 	public Map map;
 	public int vx = 5;
 	public Image icon = new ImageIcon("Images/right.png").getImage();
-	public boolean left = false, right = false, jump = false,down = false;
+	public boolean left = false, right = false, down = true,jump=false;
+	public int Jump = 0;// 用来设定按跳键只能跳一次
+	int g = 10;// 重力
 	public KeyListener kl = new KeyListener() {
 		@Override
 		public void keyTyped(KeyEvent e) {//// 发生击键事件时被触发
@@ -34,7 +36,8 @@ public class Mario implements Runnable {
 				left = false;
 			}
 			if (key == KeyEvent.VK_W) {
-				jump = false;
+				Jump = 0;
+				jump=false;
 			}
 
 		}
@@ -50,8 +53,9 @@ public class Mario implements Runnable {
 				left = true;
 			}
 			if (key == KeyEvent.VK_W) {
-				jump = true;
 				jump();
+				jump=true;
+				Jump++;
 			}
 		}
 	};
@@ -59,8 +63,9 @@ public class Mario implements Runnable {
 
 	public void run() {
 		while (true) {
+			IfFloat();
 			if (right) {
-				vx=5;
+				vx = 5;
 				if (RCollisionDetection()) {// 有障碍的话玛丽的速度为0
 					vx = 0;
 				}
@@ -82,18 +87,15 @@ public class Mario implements Runnable {
 				}
 			}
 			if (left) {
-				vx=5;
-				if (LCollisionDetection()) {
+				vx = 5;
+				if (LCollisionDetection()) {// 有障碍的话玛丽的速度为0
 					vx = 0;
-				} else if (LCollisionDetection()) {
-					vx = 5;
 				}
 				if (x > 0) {
 					x = x - vx;
 					icon = new ImageIcon("Images/mario_left.gif").getImage();
 				}
 			}
-
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
@@ -104,12 +106,17 @@ public class Mario implements Runnable {
 	}
 
 	public void jump() {
+		vx = 5;
 		Thread tjump = new Thread();
 		new Thread(tjump) {
 			public void run() {
-				while (jump) {
-					for (int i = y; i > 450; i = i - 5) {
-						y = i;
+				if (Jump == 1) {
+					for (int i = 0; i < 150; i = i + vx) {
+						y = y - vx;
+						if (UCollisionDetection()) {
+							vx = 0;
+							break;
+						}
 						try {
 							Thread.sleep(15);
 						} catch (InterruptedException e) {
@@ -117,21 +124,7 @@ public class Mario implements Runnable {
 							e.printStackTrace();
 						}
 					}
-					while (y < 600) {
-						y = y + 5;
-						try {
-							Thread.sleep(15);
-						} catch (InterruptedException e) {
-							// TODO: handle exception
-							e.printStackTrace();
-						}
-					}
-					try {
-						Thread.sleep(10);
-					} catch (InterruptedException e) {
-						// TODO: handle exception
-						e.printStackTrace();
-					}
+					Gravity();
 				}
 			}
 		}.start();
@@ -140,62 +133,101 @@ public class Mario implements Runnable {
 
 	public boolean RCollisionDetection() {// 向右检测碰撞函数
 		Rectangle Rmario = new Rectangle(x, y, icon.getWidth(null), icon.getHeight(null));
-		Rectangle Rmap=null;
+		Rectangle Rmap = null;
 		for (int i = 0; i < map.maplist.size(); i++) {
 			MapAttribute a = map.maplist.get(i);
-			if(right) {
-				Rmap = new Rectangle(a.x-5, a.y, a.icon.getWidth(null), a.icon.getHeight(null));
+			if (right) {
+				Rmap = new Rectangle(a.x - 5, a.y, a.icon.getWidth(null), a.icon.getHeight(null));
 			}
-			if(Rmario.intersects(Rmap)) {
+			if (Rmario.intersects(Rmap)) {
 				System.out.println("右边有东西");
 				return true;
 			}
 		}
 		return false;
 	}
+
 	public boolean LCollisionDetection() {// 向左检测碰撞函数
 		Rectangle Rmario = new Rectangle(x, y, icon.getWidth(null), icon.getHeight(null));
-		Rectangle Rmap=null;
+		Rectangle Rmap = null;
 		for (int i = 0; i < map.maplist.size(); i++) {
 			MapAttribute a = map.maplist.get(i);
-			if(left) {
-				Rmap = new Rectangle(a.x+2, a.y, a.icon.getWidth(null), a.icon.getHeight(null));
+			if (left) {
+				Rmap = new Rectangle(a.x + 5, a.y, a.icon.getWidth(null), a.icon.getHeight(null));
 			}
-			if(Rmario.intersects(Rmap)) {
+			if (Rmario.intersects(Rmap)) {
 				System.out.println("左边有东西");
 				return true;
 			}
 		}
 		return false;
 	}
-	public boolean UCollisionDetection() {//向上检测碰撞函数
+
+	public boolean UCollisionDetection() {// 向上检测碰撞函数
 		Rectangle Rmario = new Rectangle(x, y, icon.getWidth(null), icon.getHeight(null));
-		Rectangle Rmap=null;
+		Rectangle Rmap = null;
 		for (int i = 0; i < map.maplist.size(); i++) {
 			MapAttribute a = map.maplist.get(i);
-			if(jump) {
-				Rmap = new Rectangle(a.x, a.y+2, a.icon.getWidth(null), a.icon.getHeight(null));
+			if (down) {
+				Rmap = new Rectangle(a.x, a.y + 5, a.icon.getWidth(null), a.icon.getHeight(null));
 			}
-			if(Rmario.intersects(Rmap)) {
+			if (Rmario.intersects(Rmap)) {
 				System.out.println("上边有东西");
 				return true;
 			}
 		}
 		return false;
 	}
-	public boolean DCollisionDetection() {//向下检测碰撞函数
+
+	public boolean DCollisionDetection() {// 向下检测碰撞函数
 		Rectangle Rmario = new Rectangle(x, y, icon.getWidth(null), icon.getHeight(null));
-		Rectangle Rmap=null;
+		Rectangle Rmap = null;
 		for (int i = 0; i < map.maplist.size(); i++) {
 			MapAttribute a = map.maplist.get(i);
-			if(down) {
-				Rmap = new Rectangle(a.x, a.y-2, a.icon.getWidth(null), a.icon.getHeight(null));
+			if (down) {
+				Rmap = new Rectangle(a.x, a.y - 5, a.icon.getWidth(null), a.icon.getHeight(null));
 			}
-			if(Rmario.intersects(Rmap)) {
+			if (Rmario.intersects(Rmap)) {
 				System.out.println("下边有东西");
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public void Gravity() {// 自由落体 降落函数
+		g = 5;
+		while (DCollisionDetection() == false) {
+			y = y + g;
+			g = (1 + 1 / 100) * g;
+			if (DCollisionDetection()) {
+				g = 0;
+				break;
+			}
+			try {
+				Thread.sleep(20);
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+	}
+	public void IfFloat() {//判断角色悬浮解决
+		if(jump==false) {
+			if(DCollisionDetection()==false) {
+				while(true) {
+					y=y+g;
+					if(DCollisionDetection()) {
+						break;
+					}
+					try {
+						Thread.sleep(20);
+					} catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 	}
 }
