@@ -14,7 +14,7 @@ public class Mario implements Runnable {
 	public Map map;
 	public int vx = 5;
 	public Image icon = new ImageIcon("Images/right.png").getImage();
-	public boolean left = false, right = false, down = true,jump=false;
+	public boolean left = false, right = false, down = true, jump = false, d = false;
 	public int Jump = 0;// 用来设定按跳键只能跳一次
 	int g = 10;// 重力
 	public KeyListener kl = new KeyListener() {
@@ -37,7 +37,7 @@ public class Mario implements Runnable {
 			}
 			if (key == KeyEvent.VK_W) {
 				Jump = 0;
-				jump=false;
+				//jump = false;
 			}
 
 		}
@@ -54,7 +54,7 @@ public class Mario implements Runnable {
 			}
 			if (key == KeyEvent.VK_W) {
 				jump();
-				jump=true;
+				jump = true;
 				Jump++;
 			}
 		}
@@ -63,14 +63,13 @@ public class Mario implements Runnable {
 
 	public void run() {
 		while (true) {
-			IfFloat();
+			if(jump==false) {
+				IfFloat();
+			}
 			if (right) {
 				vx = 5;
 				if (RCollisionDetection()) {// 有障碍的话玛丽的速度为0
 					vx = 0;
-				}
-				if(DCollisionDetection()) {
-					IfFloat();
 				}
 				if (x < 1230) {
 					if (x <= 640) {
@@ -115,10 +114,22 @@ public class Mario implements Runnable {
 			public void run() {
 				if (Jump == 1) {
 					for (int i = 0; i < 250; i = i + vx) {
-						y = y - vx;
 						if (UCollisionDetection()) {
-							vx = 0;
 							break;
+						}
+						y = y - vx;
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							// TODO: handle exception
+							e.printStackTrace();
+						}
+					}
+					while (y < 600) {
+						if (DCollisionDetection()) {
+							break;
+						}else {
+							y = y + g;
 						}
 						try {
 							Thread.sleep(10);
@@ -127,7 +138,7 @@ public class Mario implements Runnable {
 							e.printStackTrace();
 						}
 					}
-					Gravity();
+					jump=false;
 				}
 			}
 		}.start();
@@ -191,46 +202,30 @@ public class Mario implements Runnable {
 				Rmap = new Rectangle(a.x, a.y - 5, a.icon.getWidth(null), a.icon.getHeight(null));
 			}
 			if (Rmario.intersects(Rmap)) {
-				System.out.println("下边有东西");
+				// System.out.println("下边有东西");
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public void Gravity() {// 自由落体 降落函数
-		g = 5;
-		while (DCollisionDetection() == false) {
-			y = y + g;
-			g = (1 + 1 / 100) * g;
-			if (DCollisionDetection()) {
-				g = 0;
-				break;
-			}
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				// TODO: handle exception
-				e.printStackTrace();
-			}
-		}
-	}
-	public void IfFloat() {//判断角色悬浮解决
-		if(jump==false) {
-			if(DCollisionDetection()==false) {
-				while(true) {
-					y=y+g;
-					if(DCollisionDetection()) {
+	public void IfFloat() {// 判断角色悬浮解决
+		new Thread() {
+			public void run() {
+				while (DCollisionDetection() == false) {
+					if (DCollisionDetection()) {
 						break;
+					} else {
+						y = y + g;
 					}
 					try {
-						Thread.sleep(10);
+						Thread.sleep(100);
 					} catch (InterruptedException e) {
 						// TODO: handle exception
 						e.printStackTrace();
 					}
 				}
 			}
-		}
+		}.start();
 	}
 }
