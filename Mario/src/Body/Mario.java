@@ -37,7 +37,7 @@ public class Mario implements Runnable {
 			}
 			if (key == KeyEvent.VK_W) {
 				Jump = 0;
-				//jump = false;
+				jump=false;
 			}
 
 		}
@@ -59,11 +59,11 @@ public class Mario implements Runnable {
 			}
 		}
 	};
-	public Thread trun = new Thread(this);
+	public Thread trun = new Thread(this);//左右移动线程
 
 	public void run() {
-		while (true) {
-			if(jump==false) {
+		while (true) {				
+			if (jump==false) {
 				IfFloat();
 			}
 			if (right) {
@@ -126,7 +126,7 @@ public class Mario implements Runnable {
 						}
 					}
 					while (y < 600) {
-						if (DCollisionDetection()) {
+						if (DCollisionDetection()) {//向下判断是否存在障碍物
 							break;
 						}else {
 							y = y + g;
@@ -138,7 +138,6 @@ public class Mario implements Runnable {
 							e.printStackTrace();
 						}
 					}
-					jump=false;
 				}
 			}
 		}.start();
@@ -212,17 +211,19 @@ public class Mario implements Runnable {
 	public void IfFloat() {// 判断角色悬浮解决
 		new Thread() {
 			public void run() {
-				while (DCollisionDetection() == false) {
-					if (DCollisionDetection()) {
-						break;
-					} else {
-						y = y + g;
-					}
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						// TODO: handle exception
-						e.printStackTrace();
+				if(y<600) {
+					while (DCollisionDetection() == false) {
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							// TODO: handle exception
+							e.printStackTrace();
+						}
+						if (DCollisionDetection()) {
+							break;
+						} else {
+							y = y + g;
+						}
 					}
 				}
 			}
